@@ -18,8 +18,8 @@ public class App
     		throw new IllegalArgumentException("You didn't give a token!!");
     	try
     	{
-			HaruhiBot haruhi = new HaruhiBot(args[0]);
-		}
+		HaruhiBot haruhi = new HaruhiBot(args[0]);
+	}
     	catch (DiscordException e)
     	{
     		System.err.println("Error while logging in...\n");
