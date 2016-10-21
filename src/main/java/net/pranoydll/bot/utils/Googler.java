@@ -9,11 +9,17 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import net.swisstech.bitly.BitlyClient;
+import net.swisstech.bitly.model.Response;
+import net.swisstech.bitly.model.v3.ShortenResponse;
+
 
 
 // learned this from https://www.mkyong.com/java/jsoup-send-search-query-to-google/
 
 public class Googler{
+	
+	private BitlyClient bitClient = new BitlyClient("e6737788dfe95a7923d055bcc5e31cc9af1e1c48");
 	
 	private Set<String> getDataFromGoogle(String query) {
 		
@@ -56,7 +62,8 @@ public class Googler{
 		Set<String> result = getDataFromGoogle(query);
 		out += "I'm showing you the results of searching for \"" + query + "\"\n";
 		for(String temp : result){
-			out += "https://" + temp + "\n";
+			Response<ShortenResponse> respShort = bitClient.shorten().setLongUrl("https://" + temp).call();
+			out += respShort.data.url + "\n";
 		}
 		out += result.size()+" Results...";
 		
