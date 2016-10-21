@@ -30,9 +30,14 @@ public class HaruhiBot {
 		
 	}
 	
-	public HaruhiBot(String token) throws DiscordException
+	public HaruhiBot(String token)
 	{
-		makeClient(token);
+		try {
+			makeClient(token);
+		} catch (DiscordException e) {
+			System.err.println(e.getErrorMessage());
+			e.printStackTrace();
+		}
 	}
 	
 	public HaruhiBot()

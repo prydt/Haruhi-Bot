@@ -1,2 +1,3 @@
 # Haruhi-Bot
 A Discord4j bot that will do some stuff that I what it to do...
+![alt text](profile_pic.png "Haruhi...")
