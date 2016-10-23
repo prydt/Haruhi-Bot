@@ -31,7 +31,8 @@ public class Googler{
 			// need http protocol, set this as a Google bot agent :)
 			Document doc = Jsoup
 				.connect(request)
-				.userAgent("Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")
+				//.userAgent("Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")
+				.userAgent("Mozilla/17.0")
 				.timeout(5000).get();
 
 			// get all links

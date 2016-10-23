@@ -18,11 +18,13 @@ public class HaruhiEventListener
 {
 	private HaruhiBot haruhi;
 	private Googler google;
+	private StrawPoller strawpoller;
 	private char botPrefix = '-';
 	
  	public HaruhiEventListener(HaruhiBot haruhi) {
 		this.haruhi = haruhi;
 		google = new Googler();
+		strawpoller = new StrawPoller();
 	}
 	
 	public void sendMessage(IChannel channel, String content)
@@ -66,8 +68,14 @@ public class HaruhiEventListener
 		
 		if (content.charAt(0) == botPrefix)
 		{
-			if(content.substring(0, 7).equals("-google"))
-				sendMessage(messageChannel, google.google(content.substring(8)));	
+			if(content.substring(1, 7).equals("google"))
+			{
+				sendMessage(messageChannel, google.google(content.substring(8)));
+			} else
+			if(content.substring(1, 3).equals("sp"))
+			{
+				sendMessage(messageChannel, strawpoller.getPollResults(Integer.parseInt(content.substring(4))));
+			}
 		}
 	}
 	
