@@ -8,7 +8,8 @@ A Discord4j bot that will do some stuff that I want it to do...
 # Installation
 1. Invite Haruhi to your server: http://goo.gl/zLCrjd
 
-NOTE: Only do steps 2-6 if Haruhi-bot isn't online
+**NOTE: Only do steps 2-6 if Haruhi-bot isn't online**
+
 2. Clone this repository
 
 3. `cd` into `Haruhi-bot`
