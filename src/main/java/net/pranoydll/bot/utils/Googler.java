@@ -74,6 +74,8 @@ public class Googler extends Command {
     return out;
   }
 
+  public boolean hasParams() { return true; }
+
   // run the googler command
   public String run(String params)
   {

@@ -11,24 +11,25 @@ import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 
 /*
- * A class that will
+ * A class that will handle all of the events
  */
 
 public class HaruhiEventListener
 {
+  // an instance of Haruhi
   private HaruhiBot haruhi;
-  private char botPrefix = '-'; // what goes in front of all commands
 
-  private String[][] descriptions = new String[][] {
-    {"google" ,  "a command that returns the top 3 google links to the query" },
-    {"sp"     ,  "returns winner of a the strawpoll with the id given"        },
-    {"short"  ,  "returns a shorten bit.ly URL of the url given"              }
-  };
+  // the character that goes in front of all the commands
+  private static char botPrefix = Helper.getBotPrefix();
+
+  // all the command descriptions
+  private static String[][] descriptions = Helper.getDescriptions();
 
   private Command[] commands = new Command[] {
-    new Googler(),
     new StrawPoller(),
-    new Shortener()
+    new Helper(),
+    new Shortener(),
+    new Googler()
   };
 
   public HaruhiEventListener(HaruhiBot haruhi)
@@ -79,11 +80,16 @@ public class HaruhiEventListener
     {
       for(int i = 0; i < descriptions.length; i++)
       {
-        if(content.substring(1, descriptions[i][0].length() + 1)
-          .equals(descriptions[i][0]))
+        try{
+          if(content.substring(1, descriptions[i][0].length() + 1)
+            .equals(descriptions[i][0]))
+          {
+            sendMessage(messageChannel, commands[i].run(content.substring(descriptions[i][0].length() + (commands[i].hasParams() ? 2 : 0))));
+            return;
+          }
+        }catch(StringIndexOutOfBoundsException e)
         {
-          sendMessage(messageChannel, commands[i].run(content.substring(descriptions[i][0].length() + 2)));
-          return;
+          // do nothing if it goes out of bounds (there is no error here)
         }
       }
       // error message for entering wrong command

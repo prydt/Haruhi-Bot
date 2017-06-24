@@ -53,6 +53,9 @@ public class StrawPoller extends Command{
 		return "Query failed!! :cry:";
 	}
 
+  // command DOES take parameters
+  public boolean hasParams() { return true; }
+
   public String run(String params)
   {
     return getPollResults(Integer.parseInt(params));

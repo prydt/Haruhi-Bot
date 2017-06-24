@@ -13,6 +13,9 @@ public class Shortener extends Command{
   private BitlyClient bitClient = new BitlyClient("e6737788dfe95a7923d055bcc5e31cc9af1e1c48");
   private Response<ShortenResponse> respShort;
 
+  // command DOES take parameters
+  public boolean hasParams() { return true; }
+
   // run command
   public String run(String params)
   {
