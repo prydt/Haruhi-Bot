@@ -18,11 +18,11 @@ import net.swisstech.bitly.model.v3.ShortenResponse;
 // learned this from https://www.mkyong.com/java/jsoup-send-search-query-to-google/
 
 public class Googler{
-	
+
 	private BitlyClient bitClient = new BitlyClient("e6737788dfe95a7923d055bcc5e31cc9af1e1c48");
-	
+
 	private Set<String> getDataFromGoogle(String query) {
-		
+
 		Set<String> result = new HashSet<String>();
 		String request = "https://www.google.com/search?q=" + query + "&num=20";
 
@@ -39,9 +39,9 @@ public class Googler{
 			int i = 0;
 			Elements links = doc.select("a[href]");
 			for (Element link : links) {
-				
-				if(i > 5) break;
-				
+
+				if(i > 2) break;
+
 				String temp = link.attr("href");
 				if(temp.startsWith("/url?q=") && !temp.contains("webcache.googleusercontent.com")){
 	                                //use regex to get domain name
@@ -56,7 +56,7 @@ public class Googler{
 
 		return result;
 	}
-	
+
 	public String google(String query)
 	{
 		String out = "";
@@ -67,7 +67,7 @@ public class Googler{
 			out += respShort.data.url + "\n";
 		}
 		out += result.size()+" Results...";
-		
+
 		return out;
 	}
 }
