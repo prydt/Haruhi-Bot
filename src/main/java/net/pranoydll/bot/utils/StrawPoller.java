@@ -9,10 +9,10 @@ import com.google.gson.JsonObject;
 
 import org.json.*;
 
-public class StrawPoller {
-	
+public class StrawPoller extends Command{
+
 	private Document doc;
-	
+
 	public String getPollResults(int id)
 	{
 		try {
@@ -23,33 +23,38 @@ public class StrawPoller {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		String question = null;
 		JSONArray choices = null;
-		int largest = 0; 
-		
+		int largest = 0;
+
 		JSONObject json;
 		try {
 			json = new JSONObject(doc.text());
-			
-			
+
+
 			question = json.getString("title");
-			
+
 			JSONArray votes = json.getJSONArray("votes");
 			choices = json.getJSONArray("options");
-			
+
 			largest = -1;
 			for(int i = 0; i < votes.length(); i++)
 			{
 				largest = (votes.getInt(i) > largest) ? i : largest;
 			}
-			
+
 			return "The winner of the poll \"" + question + "\" is ... " + choices.getString(largest);
-		
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		return "Query failed!! :cry:";
 	}
+
+  public String run(String params)
+  {
+    return getPollResults(Integer.parseInt(params));
+  }
 }

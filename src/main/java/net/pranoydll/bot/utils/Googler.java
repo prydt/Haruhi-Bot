@@ -9,65 +9,74 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import net.swisstech.bitly.BitlyClient;
-import net.swisstech.bitly.model.Response;
-import net.swisstech.bitly.model.v3.ShortenResponse;
+//
+// a class for all commands internet related!
+//
+public class Googler extends Command {
 
+  private Shortener shorten;
 
+  public Googler()
+  {
+    shorten = new Shortener();
+  }
 
-// learned this from https://www.mkyong.com/java/jsoup-send-search-query-to-google/
+  // gets urls from Google
+  private Set<String> getDataFromGoogle(String query)
+  {
+    Set<String> result = new HashSet<String>();
+    String request = "https://www.google.com/search?q=" + query + "&num=20";
 
-public class Googler{
+    try {
 
-	private BitlyClient bitClient = new BitlyClient("e6737788dfe95a7923d055bcc5e31cc9af1e1c48");
+      // need http protocol, set this as a Google bot agent :)
+      Document doc = Jsoup
+        .connect(request)
+        //.userAgent("Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")
+        .userAgent("Mozilla/17.0")
+        .timeout(5000).get();
 
-	private Set<String> getDataFromGoogle(String query) {
+      // get all links
+      int i = 0;
+      Elements links = doc.select("a[href]");
+      for (Element link : links) {
 
-		Set<String> result = new HashSet<String>();
-		String request = "https://www.google.com/search?q=" + query + "&num=20";
+        if(i > 2) break;
 
-		try {
+        String temp = link.attr("href");
+        if(temp.startsWith("/url?q=") && !temp.contains("webcache.googleusercontent.com")){
+          //use regex to get domain name
+          result.add("google.com" + temp);
+          i++;
+        }
+      }
 
-			// need http protocol, set this as a Google bot agent :)
-			Document doc = Jsoup
-				.connect(request)
-				//.userAgent("Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")
-				.userAgent("Mozilla/17.0")
-				.timeout(5000).get();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
-			// get all links
-			int i = 0;
-			Elements links = doc.select("a[href]");
-			for (Element link : links) {
+    return result;
+  }
 
-				if(i > 2) break;
+  // return top 3 urls as shortened urls in a String
+  private String google(String query)
+  {
+    String out = "";
+    Set<String> result = getDataFromGoogle(query);
 
-				String temp = link.attr("href");
-				if(temp.startsWith("/url?q=") && !temp.contains("webcache.googleusercontent.com")){
-	                                //use regex to get domain name
-					result.add("google.com" + temp);
-					i++;
-				}
-			}
+    out += "I'm showing you the results of searching for \"" + query + "\"\n";
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    for(String temp : result){
+      out += shorten.run("https://" + temp) + "\n";
+    }
+    out += result.size()+" Results...";
 
-		return result;
-	}
+    return out;
+  }
 
-	public String google(String query)
-	{
-		String out = "";
-		Set<String> result = getDataFromGoogle(query);
-		out += "I'm showing you the results of searching for \"" + query + "\"\n";
-		for(String temp : result){
-			Response<ShortenResponse> respShort = bitClient.shorten().setLongUrl("https://" + temp).call();
-			out += respShort.data.url + "\n";
-		}
-		out += result.size()+" Results...";
-
-		return out;
-	}
+  // run the googler command
+  public String run(String params)
+  {
+    return google(params);
+  }
 }
